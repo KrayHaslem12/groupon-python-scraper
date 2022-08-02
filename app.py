@@ -1,6 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 from os.path import exists
+import time
+import random
+
+def randsleep(min_seconds, max_seconds):
+    sleep_time = random.randint(min_seconds, max_seconds)
+    time.sleep(sleep_time)
 
 if not exists("groupon-page.html"):
     print("Requesting URL...")
@@ -10,6 +16,7 @@ if not exists("groupon-page.html"):
    'origin': url,
    'referer': url
     }
+    randsleep(2,7)
     page = requests.get(url, headers=HEADERS)
     page_content = page.content
     with open('groupon-page.html', 'w') as outfile:
