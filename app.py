@@ -1,15 +1,26 @@
 import requests
 from bs4 import BeautifulSoup
+from os.path import exists
 
-url = "https://www.groupon.com/browse/salt-lake-city?address=Vernal%2C+UT+84078&lat=40.455&lng=-109.529&locale=en_US"
-HEADERS = {
+if not exists("groupon-page.html"):
+    print("Requesting URL...")
+    url = "https://www.groupon.com/browse/salt-lake-city?lat=40.455&lng=-109.529&address=Vernal%2C+UT+84078&division=salt-lake-city&locale=en_US"
+    HEADERS = {
    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537/6',
    'origin': url,
    'referer': url
-}
-page = requests.get(url, headers=HEADERS)
+    }
+    page = requests.get(url, headers=HEADERS)
+    page_content = page.content
+    with open('groupon-page.html', 'w') as outfile:
+        outfile.write(page_content.decode())
+else:
+    with open ('groupon-page.html', 'r') as infile:
+        print('Reading file...')
+        page = infile.read()
+        page_content = page.encode('utf-8')
 
-soup = BeautifulSoup(page.content, "html.parser")
+soup = BeautifulSoup(page_content, "html.parser")
 
 groupons = []
 
